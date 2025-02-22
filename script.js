@@ -11,22 +11,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteList = document.getElementById('delete-list');
     const confirmDeleteButton = document.getElementById('confirm-delete');
 
-    const JSONBIN_API_KEY = '$2a$10$ZoZ/S0ocNYnC6zp8F3aTyOr3neOl3iJEbPRcVRgAL3CWceSOqAkt2';
-    const JSONBIN_BIN_ID = '67b99c13acd3cb34a8ec2290';
-    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-    
+    const AIRTABLE_API_KEY = 'patrngWRvVfspTkCU.7114186a9e435c5133957698100ee336746fa5abe94c99c35ab349cdc3cdbb14';
+    const AIRTABLE_BASE_ID = 'app0C1cGJkz2QerDg';
+    const AIRTABLE_TABLE_NAME = 'Anime';
+    const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
 
     let animeData = [];
 
-    // Fetch anime data from JSONBin.io
+    // Fetch anime data from Airtable
     async function fetchAnimeData() {
-        const response = await fetch(JSONBIN_URL, {
+        const response = await fetch(AIRTABLE_URL, {
             headers: {
-                'X-Master-Key': JSONBIN_API_KEY,
+                Authorization: `Bearer ${AIRTABLE_API_KEY}`,
             },
         });
         const data = await response.json();
-        animeData = data.record;
+        animeData = data.records.map(record => ({
+            id: record.fields.id,
+            title: record.fields.title,
+            recordId: record.id, // Airtable record ID for deletion
+        }));
         renderAnimeList();
     }
 
@@ -62,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('div');
             item.className = 'delete-list-item';
             item.innerHTML = `
-                <input type="checkbox" id="anime-${index}" value="${anime.id}">
+                <input type="checkbox" id="anime-${index}" value="${anime.recordId}">
                 <label for="anime-${index}">${anime.title}</label>
             `;
             deleteList.appendChild(item);
@@ -76,14 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (id && title) {
             try {
-                animeData.push({ id, title });
-                await fetch(JSONBIN_URL, {
-                    method: 'PUT',
+                await fetch(AIRTABLE_URL, {
+                    method: 'POST',
                     headers: {
-                        'X-Master-Key': JSONBIN_API_KEY,
+                        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(animeData),
+                    body: JSON.stringify({
+                        fields: { id, title },
+                    }),
                 });
                 fetchAnimeData(); // Refresh the list
                 animeIdInput.value = '';
@@ -103,17 +108,16 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(input => input.value);
 
         if (selectedAnime.length > 0) {
-            if (confirm(`Do you want to delete the Anime:\n${selectedAnime.map(id => animeData.find(anime => anime.id === id).title).join('\n')}`)) {
+            if (confirm(`Do you want to delete the Anime:\n${selectedAnime.map(recordId => animeData.find(anime => anime.recordId === recordId).title).join('\n')}`)) {
                 try {
-                    animeData = animeData.filter(anime => !selectedAnime.includes(anime.id));
-                    await fetch(JSONBIN_URL, {
-                        method: 'PUT',
-                        headers: {
-                            'X-Master-Key': JSONBIN_API_KEY,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(animeData),
-                    });
+                    for (const recordId of selectedAnime) {
+                        await fetch(`${AIRTABLE_URL}/${recordId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+                            },
+                        });
+                    }
                     fetchAnimeData(); // Refresh the list
                     renderDeleteList();
                 } catch (error) {
