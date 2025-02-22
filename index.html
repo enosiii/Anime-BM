@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Bookmark</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>My Anime List</h1>
+        <div id="anime-list" class="anime-list"></div>
+        <div class="action-buttons">
+            <button id="add-button">Add</button>
+            <button id="delete-button">Delete</button>
+        </div>
+      
+        <div id="add-container" class="add-container hidden">
+            <input type="text" id="anime-id" placeholder="Enter Anime ID">
+            <input type="text" id="anime-title" placeholder="Enter Anime Title">
+            <button id="submit-button">Submit</button>
+            <p id="notification" class="hidden"></p>
+        </div>
+        <div id="delete-container" class="delete-container hidden">
+            <div id="delete-list"></div>
+            <button id="confirm-delete">Delete</button>
+        </div>
+      
+      
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
