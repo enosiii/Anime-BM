@@ -16,7 +16,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 80%;
-    max-width: 600px;
+   /* max-width: 600px;*/
 }
 
 h1 {
@@ -63,7 +63,6 @@ h1 {
     text-align: center;
     margin-top: 2%;
     margin-bottom: 2%;
-    
     flex: 1 1 48%; 
     max-width: 100%;
 }
@@ -85,15 +84,9 @@ h1 {
 }
 
 .action-buttons {
-    justify-content: flex-start; /* Align action buttons to the left */
-    gap: 10px;
-}
-
-
-.action-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 4%;
 }
 
 .action-buttons button {
@@ -103,6 +96,7 @@ h1 {
     cursor: pointer;
     background-color: #28a745;
     color: white;
+    width: 48%;
 }
 
 .action-buttons button#delete-button {
@@ -110,16 +104,17 @@ h1 {
 }
 
 .add-container, .delete-container {
-    margin-top: 20px;
-  align-items: center;
+    margin-top: 4%;
+    align-items: center;
 }
 
 .add-container input, .delete-container input {
-    width: 100%;
+    width: 95%;
     padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 2%;
     border-radius: 5px;
     border: 1px solid #ccc;
+    text-align: center;
 }
 
 .hidden {
@@ -132,6 +127,7 @@ h1 {
 }
 
 /* Style delete list items in a single row and align to the left */
+/*
 .delete-list-item {
     display: flex;
     align-items: center;
@@ -139,17 +135,43 @@ h1 {
     width: 100%;
     padding: 5px 0;
     border-bottom: 1px solid #ddd;
+}*/
+
+
+/* Style delete list items in a single row and align to the left */
+.delete-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    left: 9%;
+    width: 100%;
+    padding: 5px 0;
+    position: relative; /* Ensure pseudo-element aligns correctly */
 }
 
+.delete-list-item::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    
+    width: 82%; /* Limit border-bottom to 80% */
+    height: 1px;
+    background-color: #ddd;
+}
+
+
 .delete-list-item input[type="checkbox"] {
-    width: 10%; /* Fixed width */
-    height: 20px; /* Fixed height for consistency */
-    margin-right: 10px; /* Space between checkbox and title */
+    width: 4%; /* Fixed width */
+    height: 4%; /* Fixed height for consistency */
+    margin-right: 2%; /* Space between checkbox and title */
+    
     flex-shrink: 0; /* Prevent shrinking */
 }
 
 .delete-list-item label {
-    flex-grow: 1; /* Make title take remaining space */
+    flex-grow: 1; /* Make title take remaining space */*/
+    flex-basis: 0; /* Start from zero width */
+    max-width: 75%; /* Prevent exceeding 75% of container */
     text-align: left; /* Ensure text aligns left */
     white-space: nowrap; /* Prevent wrapping */
     overflow: hidden;
