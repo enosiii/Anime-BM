@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(input => input.value);
 
         if (selectedAnime.length > 0) {
-            if (confirm(`Do you want to delete the Anime:\n${selectedAnime.map(recordId => animeData.find(anime => anime.recordId === recordId).title).join('\n')}`)) {
+            if (confirm(`🗑️ Do you want to delete the Anime:\n🔹${selectedAnime.map(recordId => animeData.find(anime => anime.recordId === recordId).title).join('\n🔹')}`)) {
                 try {
                     for (const recordId of selectedAnime) {
                         await fetch(`${AIRTABLE_URL}/${recordId}`, {
