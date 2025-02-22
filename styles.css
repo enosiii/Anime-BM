@@ -24,12 +24,29 @@ h1 {
     color: #333;
 }
 
+
 .anime-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
 }
+
+
+.delete-container, .add-container {
+    align-items: flex-start; /* Ensure buttons and inputs are aligned left */
+}
+
+.action-buttons {
+    justify-content: flex-start; /* Align action buttons to the left */
+    gap: 10px;
+}
+
+/*
+.delete-container, .add-container {
+    align-items: flex-start;
+}*/
+
 
 .anime-button {
     background-color: #007bff;
@@ -53,6 +70,7 @@ h1 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+
 .action-buttons {
     display: flex;
     justify-content: space-between;
@@ -74,6 +92,7 @@ h1 {
 
 .add-container, .delete-container {
     margin-top: 20px;
+  align-items: center;
 }
 
 .add-container input, .delete-container input {
@@ -93,14 +112,29 @@ h1 {
     text-align: center;
 }
 
+/* Style delete list items in a single row and align to the left */
 .delete-list-item {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
 }
 
-.delete-list-item input {
-    margin-right: 10px;
+.delete-list-item input[type="checkbox"] {
+    width: 20px; /* Fixed width */
+    height: 20px; /* Fixed height for consistency */
+    margin-right: 10px; /* Space between checkbox and title */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.delete-list-item label {
+    flex-grow: 1; /* Make title take remaining space */
+    text-align: left; /* Ensure text aligns left */
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* If title is too long, it will show "..." */
 }
 
 /* Center the Submit button in the Add container */
@@ -133,6 +167,7 @@ h1 {
 }
 
 /* Center the Delete button in the Delete container */
+
 .delete-container {
     display: flex;
     flex-direction: column;
