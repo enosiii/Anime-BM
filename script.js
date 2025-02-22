@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 animeTitleInput.value = '';
                 notification.textContent = `${title} added to the list!`;
                 notification.classList.remove('hidden');
-                setTimeout(() => notification.classList.add('hidden'), 3000);
+                setTimeout(() => notification.classList.add('hidden'), 7000);
             } catch (error) {
                 console.error('Error adding anime: ', error);
             }
