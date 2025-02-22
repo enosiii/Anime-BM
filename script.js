@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteList = document.getElementById('delete-list');
     const confirmDeleteButton = document.getElementById('confirm-delete');
 
-    const JSONBIN_API_KEY = '$2a$10$M5iyOE0vj4SPoRx8bn6YMuXq2ZwF1KlcUC2TsOB3Znekc2cGe6Mae';
+    const JSONBIN_API_KEY = '$2a$10$ZoZ/S0ocNYnC6zp8F3aTyOr3neOl3iJEbPRcVRgAL3CWceSOqAkt2';
     const JSONBIN_BIN_ID = '67b99c13acd3cb34a8ec2290';
     const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
     
