@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('div');
             item.className = 'delete-list-item';
             item.innerHTML = `
-                <input type="checkbox" id="anime-${index}" value="${anime.recordId}">
+                <input type="checkbox" id="anime-${index}" value="${anime.recordId}" class="cyberpunk-checkbox">
                 <label for="anime-${index}">${anime.title}</label>
             `;
             deleteList.appendChild(item);
