@@ -18,20 +18,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let animeData = [];
 
-    // Fetch anime data from Airtable
-    async function fetchAnimeData() {
-        const response = await fetch(AIRTABLE_URL, {
-            headers: {
-                Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-            },
-        });
-        const data = await response.json();
-        animeData = data.records.map(record => ({
-            id: record.fields.id,
-            title: record.fields.title,
-            recordId: record.id, // Airtable record ID for deletion
-        }));
-        renderAnimeList();
+    // Load data from cache
+    function loadCache() {
+        const cachedData = localStorage.getItem('animeData');
+        if (cachedData) {
+            animeData = JSON.parse(cachedData);
+            renderAnimeList();
+        }
+    }
+
+    // Save data to cache
+    function saveCache() {
+        localStorage.setItem('animeData', JSON.stringify(animeData));
+    }
+
+    // Fetch anime data from Airtable and update cache if needed
+    async function fetchAnimeData(forceUpdate = false) {
+        try {
+            const response = await fetch(AIRTABLE_URL, {
+                headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
+            });
+            const data = await response.json();
+            const newAnimeData = data.records.map(record => ({
+                id: record.fields.id,
+                title: record.fields.title,
+                recordId: record.id, // Airtable record ID for deletion
+            }));
+
+            if (JSON.stringify(newAnimeData) !== JSON.stringify(animeData) || forceUpdate) {
+                animeData = newAnimeData;
+                saveCache(); // Update cache
+                renderAnimeList();
+            }
+        } catch (error) {
+            console.error('Error fetching anime data:', error);
+        }
     }
 
     // Render anime list
@@ -80,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (id && title) {
             try {
-                await fetch(AIRTABLE_URL, {
+                const response = await fetch(AIRTABLE_URL, {
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${AIRTABLE_API_KEY}`,
@@ -90,12 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         fields: { id, title },
                     }),
                 });
-                fetchAnimeData(); // Refresh the list
-                animeIdInput.value = '';
-                animeTitleInput.value = '';
-                notification.textContent = `${title} added to the list!`;
-                notification.classList.remove('hidden');
-                setTimeout(() => notification.classList.add('hidden'), 7000);
+
+                if (response.ok) {
+                    fetchAnimeData(true); // Force update cache
+                    animeIdInput.value = '';
+                    animeTitleInput.value = '';
+                    notification.textContent = `${title} added to the list!`;
+                    notification.classList.remove('hidden');
+                    setTimeout(() => notification.classList.add('hidden'), 7000);
+                }
             } catch (error) {
                 console.error('Error adding anime: ', error);
             }
@@ -113,12 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     for (const recordId of selectedAnime) {
                         await fetch(`${AIRTABLE_URL}/${recordId}`, {
                             method: 'DELETE',
-                            headers: {
-                                Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-                            },
+                            headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
                         });
                     }
-                    fetchAnimeData(); // Refresh the list
+                    fetchAnimeData(true); // Force update cache
                     renderDeleteList();
                 } catch (error) {
                     console.error('Error deleting anime: ', error);
@@ -127,6 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initial fetch and render
+    // Load cached data first, then fetch new data in the background
+    loadCache();
     fetchAnimeData();
 });
+
